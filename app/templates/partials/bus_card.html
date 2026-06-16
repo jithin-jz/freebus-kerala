@@ -1,0 +1,34 @@
+{% set tone = {
+  "catchable": "border-emerald-500 bg-emerald-50 text-emerald-950",
+  "tight": "border-amber-500 bg-amber-50 text-amber-950",
+  "missed": "border-slate-300 bg-slate-50 text-slate-700"
+}.get(bus.catchability, "border-slate-300 bg-white text-slate-900") %}
+<article class="rounded border p-4 shadow-sm {{ tone }}">
+  <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+    <div class="min-w-0 space-y-2">
+      {% if bus.stop_name is defined %}
+        {% include "partials/stop_header.html" %}
+      {% endif %}
+      <div>
+        <h3 class="truncate text-lg font-semibold tracking-normal">{{ bus.route_name }}</h3>
+        <p class="text-sm opacity-85">
+          {{ bus.origin_stop }} to {{ bus.destination_stop }}
+          {% if bus.via %} via {{ bus.via }}{% endif %}
+        </p>
+      </div>
+      <div class="flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-normal">
+        <span class="rounded bg-white/70 px-2 py-1">{{ bus.bus_type }}</span>
+        {% if bus.is_priyadarshini %}
+          <span class="rounded bg-white/70 px-2 py-1">Priyadarshini</span>
+        {% endif %}
+      </div>
+    </div>
+    <div class="flex shrink-0 items-center gap-2 sm:flex-col sm:items-end">
+      {% if bus.departure_iso is defined %}
+        {% include "partials/countdown_badge.html" %}
+      {% endif %}
+      <span class="text-sm font-medium">{{ bus.departure_time }}</span>
+    </div>
+  </div>
+</article>
+

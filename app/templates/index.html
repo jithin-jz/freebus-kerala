@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}FreeBus Kerala{% endblock %}
+
+{% block content %}
+<section class="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+  <div class="space-y-5">
+    <div class="rounded border border-teal-900 bg-teal-950 p-5 text-white shadow-sm sm:p-7">
+      <p class="text-sm font-semibold uppercase tracking-normal text-teal-100" data-i18n="home.scheme_badge">Free for all women and transgender persons</p>
+      <h1 class="mt-3 max-w-2xl text-3xl font-semibold tracking-normal sm:text-5xl" data-i18n="home.subtitle">Free KSRTC bus tracker for the Priyadarshini scheme</h1>
+      <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+        <button
+          type="button"
+          onclick="initGPS()"
+          class="inline-flex items-center justify-center gap-2 rounded bg-amber-300 px-4 py-3 text-base font-semibold text-slate-950 hover:bg-amber-200 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-teal-950"
+        >
+          <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M12 2v3M12 19v3M2 12h3M19 12h3"></path>
+            <circle cx="12" cy="12" r="5"></circle>
+          </svg>
+          <span data-i18n="home.gps_button">Find buses near me</span>
+        </button>
+        <a href="#search" class="inline-flex items-center justify-center rounded border border-teal-200 px-4 py-3 text-base font-semibold text-white hover:bg-teal-900" data-i18n="home.or_search">Search by route</a>
+      </div>
+      <p id="gpsStatus" class="mt-4 min-h-6 text-sm text-teal-100" aria-live="polite"></p>
+    </div>
+
+    <section aria-labelledby="nearbyHeading" class="space-y-3">
+      <div class="flex items-center justify-between gap-3">
+        <h2 id="nearbyHeading" class="text-xl font-semibold tracking-normal text-slate-950">Nearby buses</h2>
+        <a href="/nearby" class="text-sm font-medium text-teal-800 hover:text-teal-950" data-i18n="home.gps_refresh">Refresh location</a>
+      </div>
+      <div id="nearbyResults" class="grid gap-3" aria-live="polite"></div>
+    </section>
+  </div>
+
+  <section id="search" aria-labelledby="searchHeading" class="rounded border border-slate-200 bg-white p-5 shadow-sm">
+    <h2 id="searchHeading" class="text-xl font-semibold tracking-normal text-slate-950" data-i18n="home.or_search">Search by route</h2>
+    <form class="mt-5 space-y-4" action="/search" method="get">
+      <label class="block">
+        <span class="text-sm font-medium text-slate-700" data-i18n="home.from_label">From</span>
+        <input name="from" autocomplete="off" class="mt-1 w-full rounded border border-slate-300 px-3 py-3 text-base focus:border-teal-700 focus:outline-none focus:ring-1 focus:ring-teal-700" placeholder="Kalpetta">
+      </label>
+      <label class="block">
+        <span class="text-sm font-medium text-slate-700" data-i18n="home.to_label">To</span>
+        <input name="to" autocomplete="off" class="mt-1 w-full rounded border border-slate-300 px-3 py-3 text-base focus:border-teal-700 focus:outline-none focus:ring-1 focus:ring-teal-700" placeholder="Kozhikode">
+      </label>
+      <label class="flex items-center gap-3 text-sm font-medium text-slate-700">
+        <input type="checkbox" name="free_only" value="true" checked class="h-4 w-4 rounded border-slate-300 text-teal-700 focus:ring-teal-700">
+        <span data-i18n="home.free_only">Free buses only (Priyadarshini)</span>
+      </label>
+      <button class="inline-flex w-full items-center justify-center gap-2 rounded bg-teal-700 px-4 py-3 text-base font-semibold text-white hover:bg-teal-800 focus:outline-none focus:ring-2 focus:ring-teal-700 focus:ring-offset-2" type="submit">
+        <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"></circle>
+          <path d="m20 20-3.5-3.5"></path>
+        </svg>
+        <span data-i18n="home.search_button">Search buses</span>
+      </button>
+    </form>
+  </section>
+</section>
+{% endblock %}

@@ -1,0 +1,20 @@
+{
+  "home.title": "FreeBus Kerala",
+  "home.subtitle": "Free KSRTC bus tracker for the Priyadarshini scheme",
+  "home.gps_button": "Find buses near me",
+  "home.gps_refresh": "Refresh location",
+  "home.locating": "Finding your location...",
+  "home.gps_requesting": "Requesting GPS access...",
+  "home.gps_found": "Location found",
+  "home.gps_low_accuracy": "GPS accuracy is low - results may vary.",
+  "home.from_label": "From",
+  "home.to_label": "To",
+  "home.free_only": "Free buses only (Priyadarshini)",
+  "home.search_button": "Search buses",
+  "home.or_search": "Search by route",
+  "home.scheme_badge": "Free for all women and transgender persons",
+  "results.no_buses_soon": "No buses found for this search.",
+  "footer.scheme_note": "Free travel on KSRTC Ordinary buses for all women and transgender persons.",
+  "errors.gps_not_supported": "GPS not supported in this browser.",
+  "errors.gps_unknown": "Could not get your location. Please try again."
+}

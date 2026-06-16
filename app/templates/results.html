@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Search results - FreeBus Kerala{% endblock %}
+
+{% block content %}
+<section class="grid gap-6 lg:grid-cols-[0.42fr_0.58fr]">
+  <form class="rounded border border-slate-200 bg-white p-5 shadow-sm" action="/search" method="get">
+    <h1 class="text-xl font-semibold tracking-normal text-slate-950">Search buses</h1>
+    <label class="mt-5 block">
+      <span class="text-sm font-medium text-slate-700" data-i18n="home.from_label">From</span>
+      <input name="from" value="{{ query_from }}" class="mt-1 w-full rounded border border-slate-300 px-3 py-3 text-base focus:border-teal-700 focus:outline-none focus:ring-1 focus:ring-teal-700">
+    </label>
+    <label class="mt-4 block">
+      <span class="text-sm font-medium text-slate-700" data-i18n="home.to_label">To</span>
+      <input name="to" value="{{ query_to }}" class="mt-1 w-full rounded border border-slate-300 px-3 py-3 text-base focus:border-teal-700 focus:outline-none focus:ring-1 focus:ring-teal-700">
+    </label>
+    <label class="mt-4 flex items-center gap-3 text-sm font-medium text-slate-700">
+      <input type="checkbox" name="free_only" value="true" {% if free_only %}checked{% endif %} class="h-4 w-4 rounded border-slate-300 text-teal-700 focus:ring-teal-700">
+      <span data-i18n="home.free_only">Free buses only (Priyadarshini)</span>
+    </label>
+    <button class="mt-5 inline-flex w-full items-center justify-center rounded bg-teal-700 px-4 py-3 text-base font-semibold text-white hover:bg-teal-800" type="submit" data-i18n="home.search_button">Search buses</button>
+  </form>
+
+  <section class="space-y-3" aria-live="polite">
+    <h2 class="text-xl font-semibold tracking-normal text-slate-950">Results</h2>
+    {% if error %}
+      <p class="rounded border border-amber-300 bg-amber-50 p-4 text-sm text-amber-950">{{ error }}</p>
+    {% elif results %}
+      {% for route in results %}
+        <article class="rounded border border-slate-200 bg-white p-4 shadow-sm">
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div class="min-w-0">
+              <h3 class="truncate text-lg font-semibold tracking-normal text-slate-950">{{ route.route_name }}</h3>
+              <p class="text-sm text-slate-600">{{ route.origin_stop }} to {{ route.destination_stop }}{% if route.via %} via {{ route.via }}{% endif %}</p>
+              <div class="mt-3 flex flex-wrap gap-2">
+                {% for schedule in route.schedules %}
+                  <span class="rounded border border-slate-200 bg-slate-50 px-2 py-1 text-sm font-medium text-slate-700">{{ schedule.departure_time.strftime("%H:%M") }}</span>
+                {% endfor %}
+              </div>
+            </div>
+            <span class="rounded bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-800">{{ route.bus_type }}</span>
+          </div>
+        </article>
+      {% endfor %}
+    {% else %}
+      <p class="rounded border border-slate-200 bg-white p-4 text-sm text-slate-600" data-i18n="results.no_buses_soon">No buses found for this search.</p>
+    {% endif %}
+  </section>
+</section>
+{% endblock %}

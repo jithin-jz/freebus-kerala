@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.countdown-badge[data-state="catchable"] {
+  color: #047857;
+}
+
+.countdown-badge[data-state="tight"] {
+  color: #b45309;
+}
+
+.countdown-badge[data-state="missed"] {
+  color: #475569;
+}
+
