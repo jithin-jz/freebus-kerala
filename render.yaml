@@ -1,0 +1,40 @@
+services:
+  # Web Service for the Bus Finder Web App
+  - type: web
+    name: priyadarshini-bus-finder
+    runtime: docker
+    plan: free
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: DEBUG
+        value: "false"
+      - key: APP_SECRET_KEY
+        generateValue: true
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: SUPABASE_DB_URL
+        sync: false
+      - key: SCRAPER_SOURCE_URL
+        value: "https://www.tickettogetlost.com/2026/06/14/ksrtc-women-free-bus-list-timings-priyadarshini-scheme-kerala/"
+      - key: OSM_OVERPASS_URL
+        value: "https://overpass-api.de/api/interpreter"
+
+  # Cron Job to run the scraper daily
+  - type: cron
+    name: priyadarshini-bus-scraper
+    runtime: docker
+    plan: free
+    schedule: "0 0 * * *" # Daily at midnight UTC
+    dockerCommand: "python -m scraper.main"
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: SUPABASE_DB_URL
+        sync: false
+      - key: SCRAPER_SOURCE_URL
+        value: "https://www.tickettogetlost.com/2026/06/14/ksrtc-women-free-bus-list-timings-priyadarshini-scheme-kerala/"
+      - key: OSM_OVERPASS_URL
+        value: "https://overpass-api.de/api/interpreter"
