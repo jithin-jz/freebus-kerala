@@ -4,11 +4,14 @@ services:
     name: priyadarshini-bus-finder
     runtime: docker
     plan: free
+    healthCheckPath: /api/v1/health
     envVars:
       - key: APP_ENV
         value: production
       - key: DEBUG
         value: "false"
+      - key: PORT
+        value: "8000"
       - key: APP_SECRET_KEY
         generateValue: true
       - key: SUPABASE_URL
@@ -22,19 +25,8 @@ services:
       - key: OSM_OVERPASS_URL
         value: "https://overpass-api.de/api/interpreter"
 
-  # Cron Job to run the scraper daily
-  - type: cron
-    name: priyadarshini-bus-scraper
-    runtime: docker
-    plan: free
-    schedule: "0 0 * * *" # Daily at midnight UTC
-    dockerCommand: "python -m scraper.main"
-    envVars:
-      - key: APP_ENV
-        value: production
-      - key: SUPABASE_DB_URL
-        sync: false
-      - key: SCRAPER_SOURCE_URL
-        value: "https://www.tickettogetlost.com/2026/06/14/ksrtc-women-free-bus-list-timings-priyadarshini-scheme-kerala/"
-      - key: OSM_OVERPASS_URL
-        value: "https://overpass-api.de/api/interpreter"
+  # NOTE: The daily scrape runs via GitHub Actions (.github/workflows/scrape.yml),
+  # which is free. Render Cron Jobs require a paid instance type, so the cron is
+  # intentionally not defined here. If you upgrade to a paid plan and want Render
+  # to own the schedule instead, add a `type: cron` service running
+  # `python -m scraper.main` with APP_ENV=production and SUPABASE_DB_URL set.
