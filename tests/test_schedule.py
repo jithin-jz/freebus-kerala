@@ -1,7 +1,13 @@
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-from app.services.schedule import IST, minutes_until_departure, next_departure_at, parse_time
+from app.services.schedule import (
+    IST,
+    current_day_code,
+    minutes_until_departure,
+    next_departure_at,
+    parse_time,
+)
 
 
 def test_parse_time_handles_ist_display_formats():
@@ -19,4 +25,10 @@ def test_next_departure_rolls_to_tomorrow_after_departure():
 def test_minutes_until_departure():
     now = datetime(2026, 6, 16, 8, 0, tzinfo=ZoneInfo("Asia/Kolkata"))
     assert minutes_until_departure("08:14", now=now) == 14
+
+
+def test_current_day_code_matches_weekday():
+    # 2026-06-15 is a Monday, 2026-06-21 is a Sunday.
+    assert current_day_code(datetime(2026, 6, 15, 9, 0, tzinfo=IST)) == "mon"
+    assert current_day_code(datetime(2026, 6, 21, 9, 0, tzinfo=IST)) == "sun"
 

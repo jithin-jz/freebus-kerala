@@ -42,7 +42,11 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y postgresql-client
 
       - name: Apply database schema
-        run: psql postgresql://pbf_user:pbf_pass@localhost:5432/priyadarshini_test -f migrations/001_initial_schema.sql
+        run: |
+          for migration in $(ls migrations/*.sql | sort); do
+            echo "Applying $migration"
+            psql postgresql://pbf_user:pbf_pass@localhost:5432/priyadarshini_test -f "$migration"
+          done
 
       - name: Run tests
         env:
@@ -84,25 +88,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  deploy:
-    name: Deploy to Railway
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install Railway CLI
-        run: npm install -g @railway/cli
-
-      - name: Deploy
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        run: railway up --service priyadarshini-bus-finder
-
-      - name: Verify deployment health
-        run: |
-          sleep 30
-          curl -f https://priyadarshinibus.in/api/v1/health || exit 1
+  # Deployment is handled by Render via render.yaml (auto-deploys on push to main).
+  # Configure the Render Blueprint once and set the Supabase secrets in the Render
+  # dashboard; no deploy step is needed here.
 

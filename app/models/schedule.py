@@ -14,6 +14,7 @@ class Schedule(Base):
     days_of_operation = Column(String(20), nullable=False, default="daily")
     frequency_note = Column(Text)
     is_active = Column(Boolean, nullable=False, default=True)
+    last_seen_at = Column(DateTime(timezone=True))
     created_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
 
     route = relationship("Route", back_populates="schedules")
@@ -29,6 +30,8 @@ class ScrapeLog(Base):
     routes_added = Column(Integer, nullable=False, default=0)
     routes_updated = Column(Integer, nullable=False, default=0)
     routes_failed = Column(Integer, nullable=False, default=0)
+    routes_seen = Column(Integer, nullable=False, default=0)
+    routes_deactivated = Column(Integer, nullable=False, default=0)
     schedules_added = Column(Integer, nullable=False, default=0)
     error_message = Column(Text)
     source_url = Column(Text)

@@ -34,19 +34,18 @@ npx tailwindcss -i ./app/static/css/app.css -o ./app/static/css/app.min.css --wa
 
 On Windows PowerShell, use `Start-Process http://localhost:8000` instead of `open`.
 
-## Supabase Production Setup
+## Supabase + Render Production Setup
 
-1. Create project at supabase.com and note Project URL and anon key.
-2. Go to SQL Editor and run `migrations/001_initial_schema.sql`.
-3. Go to Settings, Database, and copy the transaction-mode connection string.
-4. Add to GitHub Secrets:
-   - `SUPABASE_DB_URL` = the connection string with password filled in
-   - `RAILWAY_TOKEN` = token from Railway dashboard
-5. Add to GitHub Variables:
-   - `SCRAPER_SOURCE_URL` = `https://www.tickettogetlost.com/2026/06/14/ksrtc-women-free-bus-list-timings-priyadarshini-scheme-kerala/`
-6. In Railway, deploy from GitHub and add env vars from `.env.example`.
-7. Set `APP_ENV=production` and provide `SUPABASE_DB_URL`.
-8. Add custom domain `priyadarshinibus.in` and point DNS to Railway.
+1. Create a project at supabase.com and note the Project URL and anon key.
+2. Open the SQL Editor and run every file in `migrations/` in order (`001_initial_schema.sql`, then `002_route_stops_and_reconciliation.sql`).
+3. Go to Settings → Database and copy the transaction-mode (pooler, port 6543) connection string.
+4. Push the repo to GitHub. CI (`.github/workflows/deploy.yml`) runs tests, lint, and builds the image.
+5. In Render, create a Blueprint from `render.yaml`. It provisions the web service and the daily scraper cron.
+6. Set these as Render secrets (synced=false in `render.yaml`): `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_DB_URL` (with the password filled in).
+7. Set `APP_ENV=production`. Render auto-deploys on every push to `main`.
+8. Add the custom domain `priyadarshinibus.in` in Render and point DNS accordingly.
+
+Note: keep `DB_POOL_SIZE`/`DB_MAX_OVERFLOW` small (defaults 5/5). The Supabase pooler multiplexes connections, so a large SQLAlchemy pool only exhausts the upstream limit.
 
 ## Endpoints
 

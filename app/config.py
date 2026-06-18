@@ -21,6 +21,13 @@ class Settings(BaseSettings):
     supabase_anon_key: str = ""
     supabase_db_url: str = ""
 
+    # Connection pool. Keep small when running behind a transaction-mode pooler
+    # (e.g. Supabase pgbouncer): the pooler multiplexes connections, so a large
+    # SQLAlchemy pool only exhausts the upstream limit.
+    db_pool_size: int = 5
+    db_max_overflow: int = 5
+    db_pool_timeout: int = 30
+
     scraper_source_url: str = (
         "https://www.tickettogetlost.com/2026/06/14/"
         "ksrtc-women-free-bus-list-timings-priyadarshini-scheme-kerala/"
@@ -28,8 +35,14 @@ class Settings(BaseSettings):
     scraper_rate_limit_seconds: float = 2.0
     scraper_user_agent: str = "PriyadarshiniBusFinder/1.0"
     scraper_alert_email: str = ""
+    # Abort the write if parsed route count falls below this fraction of the last
+    # successful scrape (guards against silent source-layout breakage). Override
+    # with SCRAPER_FORCE=true to bypass.
+    scraper_min_route_ratio: float = 0.7
 
     osm_overpass_url: str = "https://overpass-api.de/api/interpreter"
+    osm_nominatim_url: str = "https://nominatim.openstreetmap.org/search"
+    geocoding_enabled: bool = True
 
     enable_analytics: bool = False
     max_nearby_radius_metres: int = 2000

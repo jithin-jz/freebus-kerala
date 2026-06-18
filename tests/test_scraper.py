@@ -1,5 +1,5 @@
 from scraper.classifier import is_priyadarshini
-from scraper.parser import parse_routes, schedules_from_text
+from scraper.parser import parse_routes, schedules_from_text, split_via_stops
 
 
 def test_classifier_only_allows_ordinary_services():
@@ -43,3 +43,25 @@ def test_parser_expands_frequency_patterns():
         "06:30",
         "07:00",
     ]
+
+
+def test_split_via_stops_handles_multiple_separators():
+    assert split_via_stops("Vythiri, Adivaram and Thamarassery") == [
+        "Vythiri",
+        "Adivaram",
+        "Thamarassery",
+    ]
+    assert split_via_stops(None) == []
+    assert split_via_stops("") == []
+
+
+def test_parser_extracts_ordered_via_stops():
+    html = """
+    <ul>
+      <li>Kalpetta to Kozhikode (via Vythiri, Adivaram, Thamarassery) : 06:30</li>
+    </ul>
+    """
+    routes = parse_routes(html, source_url="https://example.test")
+    assert len(routes) == 1
+    assert routes[0].destination == "Kozhikode"
+    assert routes[0].via_stops == ["Vythiri", "Adivaram", "Thamarassery"]

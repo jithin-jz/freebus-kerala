@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import get_settings
 from app.database import get_db
-from app.services.search import nearby_buses, search_routes
+from app.services.search import get_route_detail, nearby_buses, search_routes
 
 logger = logging.getLogger(__name__)
 router = APIRouter(tags=["pages"])
@@ -86,8 +86,19 @@ async def nearby_page(
 
 
 @router.get("/routes/{route_id}", response_class=HTMLResponse)
-async def route_detail(request: Request, route_id: int) -> HTMLResponse:
-    return render(request, "route_detail.html", {"route_id": route_id})
+async def route_detail(
+    request: Request,
+    route_id: int,
+    db: AsyncSession = Depends(get_db),
+) -> HTMLResponse:
+    route = None
+    error = None
+    try:
+        route = await get_route_detail(db, route_id)
+    except Exception as exc:
+        logger.warning("Route detail query failed: %s", exc)
+        error = "Route details are temporarily unavailable. Please try again later."
+    return render(request, "route_detail.html", {"route_id": route_id, "route": route, "error": error})
 
 
 @router.get("/scheme", response_class=HTMLResponse)

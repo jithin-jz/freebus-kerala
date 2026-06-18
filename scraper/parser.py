@@ -43,8 +43,17 @@ class ParsedRoute:
     is_priyadarshini: bool
     schedules: list[ParsedSchedule] = field(default_factory=list)
     via: str | None = None
+    via_stops: list[str] = field(default_factory=list)
     source_url: str | None = None
     raw_text: str = ""
+
+
+def split_via_stops(via: str | None) -> list[str]:
+    """Split a 'via' string into ordered intermediate stop names."""
+    if not via:
+        return []
+    parts = re.split(r"\s*(?:,|;|&|/|\band\b|->|-->)\s*", via, flags=re.IGNORECASE)
+    return [part.strip(" :-") for part in parts if part.strip(" :-")]
 
 
 def parse_time_token(token: str) -> time:
@@ -173,6 +182,7 @@ def parse_route_line(text: str, source_url: str | None) -> ParsedRoute | None:
         is_priyadarshini=is_priyadarshini(bus_type, cleaned),
         schedules=schedules,
         via=via,
+        via_stops=split_via_stops(via),
         source_url=source_url,
         raw_text=cleaned,
     )

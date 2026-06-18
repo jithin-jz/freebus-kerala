@@ -3,9 +3,18 @@ from zoneinfo import ZoneInfo
 
 IST = ZoneInfo("Asia/Kolkata")
 
+# Short weekday codes (Mon=0 .. Sun=6) used to match schedules.days_of_operation.
+DAY_CODES = ("mon", "tue", "wed", "thu", "fri", "sat", "sun")
+
 
 def now_ist() -> datetime:
     return datetime.now(tz=IST)
+
+
+def current_day_code(now: datetime | None = None) -> str:
+    """Return the lowercase short code for the current IST weekday."""
+    current = now or now_ist()
+    return DAY_CODES[current.weekday()]
 
 
 def parse_time(value: str | time) -> time:

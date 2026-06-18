@@ -1,6 +1,6 @@
 import logging
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Response
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -15,7 +15,7 @@ router = APIRouter(prefix="/api/v1", tags=["api"])
 
 
 @router.get("/health")
-async def health(db: AsyncSession = Depends(get_db)) -> dict[str, object]:
+async def health(response: Response, db: AsyncSession = Depends(get_db)) -> dict[str, object]:
     try:
         row = (
             await db.execute(
@@ -31,7 +31,8 @@ async def health(db: AsyncSession = Depends(get_db)) -> dict[str, object]:
         ).mappings().first()
     except Exception as exc:
         logger.warning("Health check could not read database: %s", exc)
-        return {"status": "ok", "database": "unavailable", "last_scrape": None}
+        response.status_code = 503
+        return {"status": "degraded", "database": "unavailable", "last_scrape": None}
 
     return {
         "status": "ok",
