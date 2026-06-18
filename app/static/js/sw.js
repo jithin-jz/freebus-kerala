@@ -2,6 +2,7 @@ const CACHE_NAME = "pbf-shell-v2";
 const APP_SHELL = [
   "/",
   "/offline.html",
+  "/static/css/app.min.css",
   "/static/js/app.js",
   "/static/js/i18n.js",
   "/static/locales/en.json",

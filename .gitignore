@@ -12,7 +12,6 @@ htmlcov/
 .venv/
 venv/
 node_modules/
-app/static/css/app.min.css
 dist/
 build/
 *.egg-info/
