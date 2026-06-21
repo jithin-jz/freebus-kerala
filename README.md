@@ -34,19 +34,6 @@ npx tailwindcss -i ./app/static/css/app.css -o ./app/static/css/app.min.css --wa
 
 On Windows PowerShell, use `Start-Process http://localhost:8000` instead of `open`.
 
-## Supabase + Render Production Setup
-
-1. Create a project at supabase.com and note the Project URL and anon key.
-2. Open the SQL Editor and run every file in `migrations/` in order (`001_initial_schema.sql`, then `002_route_stops_and_reconciliation.sql`).
-3. Go to Settings → Database and copy the transaction-mode (pooler) connection string and prefix it with `postgresql+asyncpg://`.
-4. Build the CSS once and commit it if you changed any templates: `npm install && npm run build:css` (outputs `app/static/css/app.min.css`, which is committed so the deploy needs no Node).
-5. Push to GitHub. CI (`.github/workflows/deploy.yml`) runs tests and lint.
-6. In Render, create a Blueprint from `render.yaml`. It provisions the web service on the **native Python runtime** (no Docker): build `pip install -r requirements.txt`, start `uvicorn app.main:app --host 0.0.0.0 --port $PORT`.
-7. Set these as Render secrets (synced=false in `render.yaml`): `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_DB_URL` (with the password filled in).
-8. Render auto-deploys on every push to `main`.
-9. Add the custom domain `priyadarshinibus.in` in Render and point DNS accordingly.
-
-Note: keep `DB_POOL_SIZE`/`DB_MAX_OVERFLOW` small (defaults 5/5). The Supabase pooler multiplexes connections, so a large SQLAlchemy pool only exhausts the upstream limit. Docker (`Dockerfile`/`docker-compose.yml`) is kept for local development only.
 
 ## Endpoints
 
