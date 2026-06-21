@@ -43,7 +43,7 @@ On Windows PowerShell, use `Start-Process http://localhost:8000` instead of `ope
 5. Push to GitHub. CI (`.github/workflows/deploy.yml`) runs tests and lint.
 6. In Render, create a Blueprint from `render.yaml`. It provisions the web service on the **native Python runtime** (no Docker): build `pip install -r requirements.txt`, start `uvicorn app.main:app --host 0.0.0.0 --port $PORT`.
 7. Set these as Render secrets (synced=false in `render.yaml`): `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_DB_URL` (with the password filled in).
-8. Render auto-deploys on every push to `main`. The daily scrape runs via GitHub Actions (`.github/workflows/scrape.yml`) — add `SUPABASE_DB_URL` as a repo secret and `SCRAPER_SOURCE_URL` as a repo variable.
+8. Render auto-deploys on every push to `main`.
 9. Add the custom domain `priyadarshinibus.in` in Render and point DNS accordingly.
 
 Note: keep `DB_POOL_SIZE`/`DB_MAX_OVERFLOW` small (defaults 5/5). The Supabase pooler multiplexes connections, so a large SQLAlchemy pool only exhausts the upstream limit. Docker (`Dockerfile`/`docker-compose.yml`) is kept for local development only.

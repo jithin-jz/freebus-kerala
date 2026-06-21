@@ -28,7 +28,3 @@ services:
         value: "https://www.tickettogetlost.com/2026/06/14/ksrtc-women-free-bus-list-timings-priyadarshini-scheme-kerala/"
       - key: OSM_OVERPASS_URL
         value: "https://overpass-api.de/api/interpreter"
-
-  # NOTE: The daily scrape runs via GitHub Actions (.github/workflows/scrape.yml),
-  # which is free. Render Cron Jobs require a paid instance type, so the cron is
-  # intentionally not defined here.
